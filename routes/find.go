@@ -109,14 +109,14 @@ func FindEmail(c *gin.Context) {
 	var query models.EmailQuery
 
 	if err := c.BindJSON(&query); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Network Error"})
 		fmt.Println(err)
 		return
 	}
 
 	validationErr := validate.Struct(query)
 	if validationErr != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": validationErr.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"Validation Error error": validationErr.Error()})
 		return
 	}
 
@@ -139,7 +139,7 @@ func FindEmail(c *gin.Context) {
 	result, insertErr := profileCollection.InsertOne(ctx, data)
 
 	if insertErr != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": insertErr})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": insertErr.Error()})
 		fmt.Println("error happing", insertErr)
 		return
 	}
