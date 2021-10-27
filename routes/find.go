@@ -234,7 +234,7 @@ func HandleUpload(c *gin.Context) {
 	newFilename := uuid.New().String() + extension
 	dst, err := os.Create(fmt.Sprintf("./uploads/%d%s", time.Now().UnixNano(), newFilename))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, g)
+		c.JSON(http.StatusInternalServerError, gin.H{"error ": err.Error()})
 		return
 	}
 
