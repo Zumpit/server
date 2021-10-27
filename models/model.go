@@ -6,7 +6,7 @@ import (
 
 
 type CompanyQuery struct {
-	Name   string   `json:"name"`
+	Name   string   `json:"name" binding:"required`
 }
 
 type CompanyProfile struct {
@@ -26,20 +26,20 @@ type CompanyProfile struct {
 }
 
 type DomainValidation struct {
-	Domain string `json:"domain"`
+	Domain string `json:"domain" binding:"required" `
 }
 
 
 type Emails struct {
-	Email  string   `json:"email"`
+	Email  string   `json:"email binding:"required"`
 }
 
 type EmailFromDomain struct {
-	Domain      string   `json:"domain"`
+	Domain      string   `json:"domain binding:"required"`
 }
 
 type EmailValidation struct {
-	Email  string  `json:"email"`
+	Email  string  `json:"email binding:"required"`
 }
 
 type EmailQuery struct {
