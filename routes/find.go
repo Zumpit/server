@@ -108,7 +108,7 @@ func FindEmail(c *gin.Context) {
 
 	var query models.EmailQuery
     
-	if c.Request.Method != "POST" {
+	if c.Request.Method != http.MethodPost {
 		c.JSON(http.StatusMethodNotAllowed, gin.H{"error":"Request method not allowed!"} )
 		return 
 	} 
@@ -159,7 +159,7 @@ func FindEmail(c *gin.Context) {
 func GetEmailValidation(c *gin.Context){
 
     var email models.EmailValidation
-	if c.Request.Method != "GET" {
+	if c.Request.Method != http.MethodGet {
 		c.JSON(http.StatusMethodNotAllowed, gin.H{"error":"Request method not allowed!"} )
 		return 
 	} 
@@ -269,7 +269,7 @@ func FindDomain(c *gin.Context) {
    output -> www.allied-infoline.com,   
    */
    
-    if c.Request.Method != "GET" {
+    if c.Request.Method != http.MethodGet {
 	    c.JSON(http.StatusMethodNotAllowed, gin.H{"error":"Request method not allowed!"} )
 	    return 
     } 
@@ -281,7 +281,7 @@ func GetDomainValidation(c *gin.Context){
 	//ctx, cancel :=  context.WithTimeout(context.Background(), 100*time.Second)
     var domain models.DomainValidation
    
-	if c.Request.Method != "GET" {
+	if c.Request.Method != http.MethodGet {
 		c.JSON(http.StatusMethodNotAllowed, gin.H{"error":"Request method not allowed!"} )
 	    return 
 	}
@@ -340,7 +340,7 @@ func FindCompany(c *gin.Context){
 
 	var name models.CompanyQuery
     
-	if c.Request.Method != "GET" {
+	if c.Request.Method != http.MethodGet {
 		c.JSON(http.StatusMethodNotAllowed, gin.H{"error":"Request method not allowed!"} )
 	    return 
 	}
