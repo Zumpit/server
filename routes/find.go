@@ -109,7 +109,7 @@ func FindEmail(c *gin.Context) {
 	var query models.EmailQuery
 
 	if err := c.BindJSON(&query); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Network Error"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		fmt.Println(err)
 		return
 	}
@@ -202,7 +202,7 @@ func HandleUpload(c *gin.Context) {
 	buffer := make([]byte, 512)
 	_, err = file.Read(buffer)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "error while processing file"})
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
 	// filetype := http.DetectContentType(buffer)
@@ -213,13 +213,13 @@ func HandleUpload(c *gin.Context) {
 
 	_, err = file.Seek(0, io.SeekStart)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal Server error"})
+		c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
 	}
 
 	err = os.MkdirAll("./uploads", os.ModePerm)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Error while creating uploads folter"})
+		c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
 	}
 
@@ -234,7 +234,7 @@ func HandleUpload(c *gin.Context) {
 	newFilename := uuid.New().String() + extension
 	dst, err := os.Create(fmt.Sprintf("./uploads/%d%s", time.Now().UnixNano(), newFilename))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "error while destination"})
+		c.JSON(http.StatusInternalServerError, g)
 		return
 	}
 
@@ -245,7 +245,7 @@ func HandleUpload(c *gin.Context) {
 	}
 	_, err = io.Copy(dst, io.TeeReader(file, pr))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "error while copying file in server"})
+		c.JSON(http.StatusInternalServerError, gin.H{"Validation Error ":err.Error()})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Your file has been successfully uploaded"})
@@ -324,13 +324,13 @@ func FindCompany(c *gin.Context){
 
 	var name models.CompanyQuery
     if err := c.BindJSON(&name); err != nil {
-		c.JSON(http.StatusBadRequest , gin.H{"message":"Invalida Query"})
+		c.JSON(http.StatusBadRequest , gin.H{"message":err.Error()})
 		return
 	}
 
 	validationErr := validate.Struct(name)	
     if validationErr != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"Validation Error":validationErr})
+		c.JSON(http.StatusBadRequest, gin.H{"Validation Error":validationErr.Error()})
 		return 
 	} 
     
@@ -360,7 +360,7 @@ func FindCompany(c *gin.Context){
 	result, insertErr := companyCollection.InsertOne(ctx, data)
 
 	if insertErr != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": insertErr})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": insertErr.Error()})
 		fmt.Println("error happing", insertErr)
 		return
 	}
