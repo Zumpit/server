@@ -5,12 +5,37 @@ import (
 )
 
 
-type CompanyName struct {
+type CompanyQuery struct {
 	Name   string   `json:"name"`
+}
+
+type CompanyProfile struct {
+	ID               primitive.ObjectID  `bson:"_id"`                 
+	Name             string   `json:"name"`
+    Domain           string   `json:"domain"`
+	Avatar           string   `json:"avatar"`
+	Size             string   `json:"size"`
+	Hq               string   `json:"hq"`
+	Industry         string   `json:"industry"`
+	Revenue          string   `json:"revenue"`
+	Cruchbase_url    string   `json:"crunchbase_url"`
+	Description      string   `json:"description"`
+	Linkedin_Url     string   `json:"linkedin_url"`
+	Phone            string   `json:"phone"`
+	Emails           
 }
 
 type DomainValidation struct {
 	Domain string `json:"domain"`
+}
+
+
+type Emails struct {
+	Email  string   `json:"email"`
+}
+
+type EmailFromDomain struct {
+	Domain      string   `json:"domain"`
 }
 
 type EmailValidation struct {
@@ -23,9 +48,6 @@ type EmailQuery struct {
 	Domain       *string      `json:"domain"`    
 }
 
-type EmailFromDomain struct {
-	Domain      string   `json:"domain"`
-}
 
 type Profile struct { 
  	ID               primitive.ObjectID  `bson:"_id"`
