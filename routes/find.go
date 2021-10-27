@@ -107,13 +107,17 @@ func FindEmail(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
 
 	var query models.EmailQuery
-
+    
+	if c.Request.Method != "POST" {
+		c.JSON(http.StatusMethodNotAllowed, gin.H{"error":"Request method not allowed!"} )
+		return 
+	} 
 	if err := c.BindJSON(&query); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		fmt.Println(err)
 		return
 	}
-
+    
 	validationErr := validate.Struct(query)
 	if validationErr != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"Validation Error error": validationErr.Error()})
@@ -155,6 +159,10 @@ func FindEmail(c *gin.Context) {
 func GetEmailValidation(c *gin.Context){
 
     var email models.EmailValidation
+	if c.Request.Method != "GET" {
+		c.JSON(http.StatusMethodNotAllowed, gin.H{"error":"Request method not allowed!"} )
+		return 
+	} 
 	
 	validationErr := validate.Struct(email)
 	if validationErr != nil {
@@ -261,7 +269,10 @@ func FindDomain(c *gin.Context) {
    output -> www.allied-infoline.com,   
    */
    
-   
+    if c.Request.Method != "GET" {
+	    c.JSON(http.StatusMethodNotAllowed, gin.H{"error":"Request method not allowed!"} )
+	    return 
+    } 
    c.JSON(http.StatusOK, gin.H{"message":"Have make user of finding availalbe domains from godaddy, and other domain providers"})
 
 }
@@ -270,7 +281,12 @@ func GetDomainValidation(c *gin.Context){
 	//ctx, cancel :=  context.WithTimeout(context.Background(), 100*time.Second)
     var domain models.DomainValidation
    
-    if err := c.BindJSON(&domain); err != nil {
+	if c.Request.Method != "GET" {
+		c.JSON(http.StatusMethodNotAllowed, gin.H{"error":"Request method not allowed!"} )
+	    return 
+	}
+
+	if err := c.BindJSON(&domain); err != nil {
 	    c.JSON(http.StatusBadRequest, gin.H{"JSON Binding Error" : err.Error()})
 	    return
     }
@@ -323,7 +339,13 @@ func FindCompany(c *gin.Context){
 	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
 
 	var name models.CompanyQuery
-    if err := c.BindJSON(&name); err != nil {
+    
+	if c.Request.Method != "GET" {
+		c.JSON(http.StatusMethodNotAllowed, gin.H{"error":"Request method not allowed!"} )
+	    return 
+	}
+	
+	if err := c.BindJSON(&name); err != nil {
 		c.JSON(http.StatusBadRequest , gin.H{"message":err.Error()})
 		return
 	}
