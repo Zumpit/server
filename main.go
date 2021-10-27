@@ -5,7 +5,7 @@ import (
 	"os"
 
 	//"net/http"
-	"server/routes"
+	"github.com/Zumpit/server/routes"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
