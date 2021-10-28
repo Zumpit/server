@@ -163,12 +163,6 @@ func GetEmailValidation(c *gin.Context){
 		c.JSON(http.StatusMethodNotAllowed, gin.H{"error":"Request method not allowed!"} )
 		return 
 	} 
-	
-	validationErr := validate.Struct(email)
-	if validationErr != nil {
-		c.JSON(http.StatusBadRequest, gin.H{" Syntax Error": validationErr.Error()})
-		return
-	}
 
 	if err := c.BindJSON(&email); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"Request Error " : err.Error()})
@@ -176,6 +170,12 @@ func GetEmailValidation(c *gin.Context){
         return
 	}
 	
+	validationErr := validate.Struct(email)
+	if validationErr != nil {
+		c.JSON(http.StatusBadRequest, gin.H{" Syntax Error": validationErr.Error()})
+		return
+	}
+
     e := email.Email
     fmt.Println(e)
 	result, err := verifier.Verify(e)
