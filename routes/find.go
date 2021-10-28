@@ -165,6 +165,7 @@ func GetEmailValidation(c *gin.Context){
 	} 
 
 	if err := c.BindJSON(&email); err != nil {
+		
 		c.JSON(http.StatusBadRequest, gin.H{"Request Error " : err.Error()})
         fmt.Println(err)
         return
