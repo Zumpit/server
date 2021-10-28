@@ -176,7 +176,8 @@ func GetEmailValidation(c *gin.Context){
         return
 	}
 	
-    e := email.Email 
+    e := email.Email
+    fmt.Println(e)
 	result, err := verifier.Verify(e)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"Internal Server Error ":err.Error()})
@@ -380,12 +381,14 @@ func FindCompany(c *gin.Context){
 	}
     
 	result, insertErr := companyCollection.InsertOne(ctx, data)
-
+	
 	if insertErr != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": insertErr.Error()})
 		fmt.Println("error happing", insertErr)
 		return
 	}
+
+	
 
 	defer cancel()
 
