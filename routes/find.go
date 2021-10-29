@@ -157,15 +157,15 @@ func FindEmail(c *gin.Context) {
 */
 // add context
 func GetEmailValidation(c *gin.Context){
-
-    var email models.EmailValidation
+    ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
+    fmt.Println(ctx)
+	var email models.EmailValidation
 	if c.Request.Method != http.MethodGet {
 		c.JSON(http.StatusMethodNotAllowed, gin.H{"error":"Request method not allowed!"} )
 		return 
 	} 
 
-	if err := c.BindJSON(&email); err != nil {
-		
+	if err := c.BindJSON(&email); err != nil {	
 		c.JSON(http.StatusBadRequest, gin.H{"Request Error " : err.Error()})
         fmt.Println(err)
         return
@@ -186,7 +186,7 @@ func GetEmailValidation(c *gin.Context){
 		return
 	}
 	
-	
+	defer cancel()
 	c.JSON(http.StatusOK, result)
 }
 
@@ -288,21 +288,18 @@ func FindDomain(c *gin.Context) {
 	e := company.Name
 
 	domain, company_name :=  GetDomain(e)
-
+    fmt.Println(company_name)
 	domain_res.Domain = domain 
-	domain_res.Name = company_name 
+	domain_res.Name = e 
     
 	result := models.CompanyResult {
        Domain: domain_res.Domain,
-	   Name : domain_res.Name,
+	   Name: domain_res.Name,
 	}
 
 	defer cancel()
 
     c.JSON(http.StatusOK, result)
-	
-  
-
 }
 
 func GetDomainValidation(c *gin.Context){
