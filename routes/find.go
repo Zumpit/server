@@ -155,7 +155,7 @@ func FindEmail(c *gin.Context) {
 /*
   Email Validation 
 */
-
+// add context
 func GetEmailValidation(c *gin.Context){
 
     var email models.EmailValidation
@@ -270,12 +270,38 @@ func FindDomain(c *gin.Context) {
    input -> Allied Infoline
    output -> www.allied-infoline.com,   
    */
-   
-    if c.Request.Method != http.MethodGet {
-	    c.JSON(http.StatusMethodNotAllowed, gin.H{"error":"Request method not allowed!"} )
-	    return 
-    } 
-   c.JSON(http.StatusOK, gin.H{"message":"Have make user of finding availalbe domains from godaddy, and other domain providers"})
+    ctx, cancel :=  context.WithTimeout(context.Background(), 100*time.Second)
+    fmt.Println(ctx)
+    var company models.CompanyQuery 
+    if err := c.BindJSON(&company); err != nil {
+	    c.JSON(http.StatusBadRequest, gin.H{"JSON Binding Error" : err.Error()})
+	    return
+    }
+
+	validationErr := validate.Struct(company)
+	if validationErr != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"Validation Error": validationErr.Error()})
+		return
+	}
+
+	var domain_res models.CompanyResult
+	e := company.Name
+
+	domain, company_name :=  GetDomain(e)
+
+	domain_res.Domain = domain 
+	domain_res.Name = company_name 
+    
+	result := models.CompanyResult {
+       Domain: domain_res.Domain,
+	   Name : domain_res.Name,
+	}
+
+	defer cancel()
+
+    c.JSON(http.StatusOK, result)
+	
+  
 
 }
 
@@ -388,10 +414,11 @@ func FindCompany(c *gin.Context){
 		fmt.Println("error happing", insertErr)
 		return
 	}
-
-	
-
 	defer cancel()
 
 	c.JSON(http.StatusOK, result)
 }
+
+// func  FindProfile(c *gin.Context){
+//    c.JSON(http.StatusOK, gin.H{"msg":"supply chain"})
+// } 
