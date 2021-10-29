@@ -25,6 +25,11 @@ type CompanyProfile struct {
 	Emails           
 }
 
+type CompanyResult struct {
+	Domain string `json:"domain" binding:"required"`
+	Name   string   `json:"name" binding:"required"`
+}
+
 type DomainValidation struct {
 	Domain string `json:"domain" binding:"required" `
 }
