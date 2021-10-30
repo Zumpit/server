@@ -222,7 +222,7 @@ func HandleUpload(c *gin.Context) {
 	
 	filetype := http.DetectContentType(buffer)
 	if filetype != "text/csv" && filetype != "application/vnd.ms-excel" && filetype != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" {
-	 	c.JSON(http.StatusBadRequest, gin.H{"message": "file type is invalid. Please upload .txt, .xsl file."})
+	 	c.JSON(http.StatusBadRequest, gin.H{"message": "file type is invalid. Please upload .txt, .xls file."})
 	 	return
 	}
 
