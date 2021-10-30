@@ -195,17 +195,21 @@ func GetEmailValidation(c *gin.Context){
 */
 
 func HandleUpload(c *gin.Context) {
-	file, fileHeader, err := c.Request.FormFile("file")
+	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
+	fmt.Println(ctx)
 
+	file, fileHeader, err := c.Request.FormFile("fileop")
+	
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
-
+    fmt.Println(file)
 	if fileHeader.Size > MAX_UPLOAD_SIZE {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "File size is too big. Please upload file of 1 MB"})
 		return
 	}
+	
 
 	defer file.Close()
 
@@ -215,11 +219,12 @@ func HandleUpload(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
-	// filetype := http.DetectContentType(buffer)
-	// if filetype != "" && filetype != "" && filetype != "" {
-	// 	c.JSON(http.StatusBadRequest, gin.H{"message": "file type is invalid. Please upload .txt, .lxsl file."})
-	// 	return
-	// }
+	
+	filetype := http.DetectContentType(buffer)
+	if filetype != "text/csv" && filetype != "application/vnd.ms-excel" && filetype != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" {
+	 	c.JSON(http.StatusBadRequest, gin.H{"message": "file type is invalid. Please upload .txt, .xsl file."})
+	 	return
+	}
 
 	_, err = file.Seek(0, io.SeekStart)
 	if err != nil {
@@ -258,6 +263,7 @@ func HandleUpload(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"Validation Error ":err.Error()})
 		return
 	}
+	defer cancel()
 	c.JSON(http.StatusOK, gin.H{"message": "Your file has been successfully uploaded"})
 }
 
