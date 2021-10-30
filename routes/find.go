@@ -32,7 +32,7 @@ var (
 	verifier = emailVerifier.NewVerifier()
 )
 
-const MAX_UPLOAD_SIZE = 1024 * 1024
+const MAX_UPLOAD_SIZE = 1024 * 1024 * 1024
 
 // marker for progress of file upload
 type Progress struct {
@@ -54,7 +54,7 @@ func (pr *Progress) Display() {
 	}
 
 	percentage := (pr.BytesRead / pr.TotalSize) * 100
-	fmt.Printf("File upload in progress : %f\n", percentage)
+	fmt.Printf("File upload in progress : %f \n ", percentage)
 }
 
 // find linkedin url and title for email address
@@ -159,6 +159,7 @@ func FindEmail(c *gin.Context) {
 func GetEmailValidation(c *gin.Context){
     ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
     fmt.Println(ctx)
+	
 	var email models.EmailValidation
 	if c.Request.Method != http.MethodGet {
 		c.JSON(http.StatusMethodNotAllowed, gin.H{"error":"Request method not allowed!"} )
@@ -209,7 +210,6 @@ func HandleUpload(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "File size is too big. Please upload file of 1 MB"})
 		return
 	}
-	
 
 	defer file.Close()
 
@@ -221,7 +221,7 @@ func HandleUpload(c *gin.Context) {
 	}
 	
 	filetype := http.DetectContentType(buffer)
-	if filetype != "text/octet-stream" && filetype != "application/zip" && filetype != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" {
+	if filetype != "application/octet-stream" && filetype != "application/zip" && filetype != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" {
 	 	c.JSON(http.StatusBadRequest, gin.H{"message": "file type is invalid. Please upload .txt, .xls file."})
 	 	return
 	}
@@ -237,13 +237,6 @@ func HandleUpload(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
 	}
-
-	// file size restiction
-
-	/* file type restriction
-	   buffer := make([]byte, 512)
-	   _, err = file.Read(buffer)
-	*/
 
 	extension := filepath.Ext(fileHeader.Filename)
 	newFilename := uuid.New().String() + extension
@@ -276,6 +269,7 @@ func FindDomain(c *gin.Context) {
    input -> Allied Infoline
    output -> www.allied-infoline.com,   
    */
+   
     ctx, cancel :=  context.WithTimeout(context.Background(), 100*time.Second)
     fmt.Println(ctx)
     var company models.CompanyQuery 
