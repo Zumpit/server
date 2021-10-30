@@ -33,15 +33,14 @@ func main() {
 	//     AllowCredentials: true,
 	// }))
 	router.Use(cors.Default())
-    router.GET("/", routes.ConnectionPage)
+	router.GET("/", routes.ConnectionPage)
 	router.POST("/findEmail", routes.FindEmail)
 	router.GET("/validateEmail", routes.GetEmailValidation)
-    router.GET("/emailfromDomain", routes.GetEmailFromDomain)
-	router.POST("/upload", routes.HandleUpload)
-	router.GET("/validateDomain",routes.GetDomainValidation)
+	router.GET("/emailfromDomain", routes.GetEmailFromDomain)
+	router.POST("/uploadFile", routes.HandleUpload)
+	router.GET("/validateDomain", routes.GetDomainValidation)
 	router.GET("/findDomain", routes.FindDomain)
 	router.GET("/findCompany", routes.FindCompany)
-	
 
 	router.Run(":" + port)
 }
